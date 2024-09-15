@@ -183,7 +183,7 @@
                 var text = this.getAttribute('data-text'); // Get the text from the data-text attribute
                 var utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-IN'; // Set the language
-                utterance.rate = 0.3; // Set the speech rate
+                utterance.rate = 0.4; // Set the speech rate
                 utterance.pitch = 1; // Set the speech pitch
 
                 window.speechSynthesis.speak(utterance); // Speak the text
