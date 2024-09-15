@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <title>page_1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        .line:hover {
+            background-color: rgb(221, 224, 25);
+        }
+        
+        .cta-button {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .cta-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+
+
+    <!-- Save for Web Slices (page_1.jpg) -->
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td colspan="2" style="padding: 20px;">
+                <a href="../../../../../index.html" class="cta-button">Home</a>
+                <a href="../page-1/page_1.html" class="cta-button">Next</a>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>Lesson : </h3>
+            </td>
+            <td>
+                <h1>The Hidden Treasure</h1>
+            </td>
+        </tr>
+
+
+    </table>
+    <audio id="audio" preload="auto"></audio>
+    <!-- End Save for Web Slices -->
+</body>
+<script>
+    // Function to handle mouse enter and leave for each group
+    function handleGroupHover() {
+        // Select all cells with a data-group attribute
+        const allCells = document.querySelectorAll('[data-group]');
+
+        allCells.forEach(cell => {
+            // When mouse enters (hover starts)
+            cell.addEventListener('mouseenter', () => {
+                // Get the group number from the data attribute
+                const groupNumber = cell.getAttribute('data-group');
+
+                // Find all cells in the same group
+                const groupCells = document.querySelectorAll(`[data-group="${groupNumber}"]`);
+
+                // Add highlight class to all cells in the group
+                groupCells.forEach(c => c.classList.add('group-highlight'));
+            });
+
+            // When mouse leaves (hover ends)
+            cell.addEventListener('mouseleave', () => {
+                // Get the group number from the data attribute
+                const groupNumber = cell.getAttribute('data-group');
+
+                // Find all cells in the same group
+                const groupCells = document.querySelectorAll(`[data-group="${groupNumber}"]`);
+
+                // Remove highlight class from all cells in the group
+                groupCells.forEach(c => c.classList.remove('group-highlight'));
+            });
+        });
+    }
+
+    // Initialize the hover functionality
+    handleGroupHover();
+
+    document.querySelectorAll('.play-audio').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default action
+            const audioSrc = this.getAttribute('data-audio');
+            const audioElement = document.getElementById('audio');
+            audioElement.src = audioSrc;
+            audioElement.play(); // Play the audio
+        });
+    });
+</script>
+
+</html>
