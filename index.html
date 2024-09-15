@@ -78,26 +78,26 @@
                 </a>
             </td>
             <td colspan="3" class="group-2" data-group="2">
-                <a href="#4">
+                <a href="#4" class="speak-link" data-text="They were very lazy and never liked to work">
                     <img src="images/page_1_14.jpg" width="390" height="31" border="0" alt="">
                 </a>
             </td>
         </tr>
         <tr>
             <td class="group-2" data-group="2">
-                <a href="H4">
+                <a href="#4" class="speak-link" data-text="They were very lazy and never liked to work">
                     <img src="images/page_1_17.jpg" width="95" height="29" border="0" alt="">
                 </a>
             </td>
             <td colspan="5" class="group-3" data-group="3">
-                <a href="#5">
+                <a href="#5" class="speak-link" data-text="Madhab was worried because his sons didn't help him in the field">
                     <img src="images/page_1_19.jpg" width="606" height="29" border="0" alt="">
                 </a>
             </td>
         </tr>
         <tr>
             <td colspan="2" class="group-3" data-group="3">
-                <a href="#5" id="long">
+                <a href="#5" class="speak-link" data-text="Madhab was worried because his sons didn't help him in the field">
                     <img src="images/page_1_22.jpg" width="98" height="28" border="0" alt="">
                 </a>
             </td>
@@ -182,7 +182,7 @@
 
                 var text = this.getAttribute('data-text'); // Get the text from the data-text attribute
                 var utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-IN'; // Set the language
+                utterance.lang = 'en-US'; // Set the language
                 utterance.rate = 0.4; // Set the speech rate
                 utterance.pitch = 1; // Set the speech pitch
 
