@@ -1,52 +1,32 @@
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Google TTS Page</title>
-       <style>
-           body {
-               font-family: Arial, sans-serif;
-               text-align: center;
-               margin-top: 50px;
-           }
-           #text-line {
-               font-size: 24px;
-               cursor: pointer;
-               color: blue;
-           }
-       </style>
-   </head>
-   <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResponsiveVoice Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #text-line {
+            font-size: 24px;
+            cursor: pointer;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
 
-       <p id="text-line">Hi, you all are cordially welcome to my page.</p>
+    <p id="text-line">Hi, you all are cordially welcome to my page.</p>
 
-       <audio id="audio" controls style="display:none;"></audio>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=a2zBsS5s"></script>
+    <script>
+        document.getElementById("text-line").addEventListener("click", () => {
+            responsiveVoice.speak("Hi, you all are cordially welcome to my page.", "US English Male");
+        });
+    </script>
 
-       <script>
-         document.getElementById("text-line").addEventListener("click", () => {
-    fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: "Hi, you all are cordially welcome to my page." })
-    })
-    .then(response => {
-        console.log('Response status:', response.status); // Check if the request is successful
-        return response.arrayBuffer();
-    })
-    .then(audioData => {
-        console.log('Audio data received:', audioData); // Check if audio data is received
-        const audioBlob = new Blob([audioData], { type: 'audio/mpeg' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audioElement = document.getElementById('audio');
-        audioElement.src = audioUrl;
-        audioElement.style.display = 'block';
-        audioElement.play().catch(error => console.error('Play error:', error)); // Handle any errors during play
-    })
-    .catch(error => console.error('Fetch error:', error));
-});
-
-       </script>
-
-   </body>
-   </html>
+</body>
+</html>
