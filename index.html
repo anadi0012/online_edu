@@ -24,23 +24,28 @@
        <audio id="audio" controls style="display:none;"></audio>
 
        <script>
-           document.getElementById("text-line").addEventListener("click", () => {
-               fetch('/api/tts', {
-                   method: 'POST',
-                   headers: { 'Content-Type': 'application/json' },
-                   body: JSON.stringify({ text: "Hi, you all are cordially welcome to my page." })
-               })
-               .then(response => response.arrayBuffer())
-               .then(audioData => {
-                   const audioBlob = new Blob([audioData], { type: 'audio/mpeg' });
-                   const audioUrl = URL.createObjectURL(audioBlob);
-                   const audioElement = document.getElementById('audio');
-                   audioElement.src = audioUrl;
-                   audioElement.style.display = 'block';
-                   audioElement.play();
-               })
-               .catch(error => console.error('Error:', error));
-           });
+         document.getElementById("text-line").addEventListener("click", () => {
+    fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: "Hi, you all are cordially welcome to my page." })
+    })
+    .then(response => {
+        console.log('Response status:', response.status); // Check if the request is successful
+        return response.arrayBuffer();
+    })
+    .then(audioData => {
+        console.log('Audio data received:', audioData); // Check if audio data is received
+        const audioBlob = new Blob([audioData], { type: 'audio/mpeg' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioElement = document.getElementById('audio');
+        audioElement.src = audioUrl;
+        audioElement.style.display = 'block';
+        audioElement.play().catch(error => console.error('Play error:', error)); // Handle any errors during play
+    })
+    .catch(error => console.error('Fetch error:', error));
+});
+
        </script>
 
    </body>
