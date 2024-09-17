@@ -1,170 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Google TTS Page</title>
+       <style>
+           body {
+               font-family: Arial, sans-serif;
+               text-align: center;
+               margin-top: 50px;
+           }
+           #text-line {
+               font-size: 24px;
+               cursor: pointer;
+               color: blue;
+           }
+       </style>
+   </head>
+   <body>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Education Platform</title>
-    <style>
-        /* Reset some basic styles */
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        
-        .header {
-            background-color: #d36060;
-            padding: 10px 10px;
-            text-align: center;
-        }
-        
-        .header h2 {
-            color: #f5ec81;
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-        
-        .header p {
-            font-size: 1.2rem;
-            color: #ffffff;
-            margin-bottom: 5px;
-        }
-        
-        .cta-button {
-            background-color: #28a745;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-        }
-        
-        .cta-button:hover {
-            background-color: #218838;
-        }
-        
-        .standard {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 10px 0;
-            padding: 8px;
-            gap: 30px;
-        }
-        
-        .standard-item {
-            background-color: rgb(233, 177, 177);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 8px;
-            width: 300px;
-            text-align: center;
-        }
-        
-        .standard-item h3 {
-            color: #0066cc;
-            margin-bottom: 10px;
-        }
-        
-        .subject {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 10px 0;
-            padding: 8px;
-            gap: 8px;
-        }
-        
-        .subject-item {
-            background-color: rgb(106, 108, 117);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 6px;
-            width: 100px;
-            text-align: center;
-        }
-        
-        .subject-item h5 {
-            color: #91520a;
-            margin-bottom: 5px;
-        }
-        
-        .subject-item p {
-            color: #555;
-            font-size: 1rem;
-        }
-        
-        a {
-            text-decoration: none;
-            /* Removes underline */
-            color: inherit;
-            /* Inherits the text color */
-        }
-        
-        a:hover .subject-item {
-            background-color: #f0f4f8;
-            /* Optional hover effect */
-        }
-        
-        a .subject-item {
-            display: block;
-            padding: 5px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-    </style>
-</head>
+       <p id="text-line">Hi, you all are cordially welcome to my page.</p>
 
-<body>
+       <audio id="audio" controls style="display:none;"></audio>
 
-    <section class="header">
-        <h2>Online Learning</h2>
-        <p>Welcome Students</p>
-    </section>
+       <script>
+           document.getElementById("text-line").addEventListener("click", () => {
+               fetch('/api/tts', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({ text: "Hi, you all are cordially welcome to my page." })
+               })
+               .then(response => response.arrayBuffer())
+               .then(audioData => {
+                   const audioBlob = new Blob([audioData], { type: 'audio/mpeg' });
+                   const audioUrl = URL.createObjectURL(audioBlob);
+                   const audioElement = document.getElementById('audio');
+                   audioElement.src = audioUrl;
+                   audioElement.style.display = 'block';
+                   audioElement.play();
+               })
+               .catch(error => console.error('Error:', error));
+           });
+       </script>
 
-    <section class="standard">
-        <div class="standard-item">
-            <h3>চতুৰ্থ শ্ৰেণী</h3>
-
-            <section class="subject">
-                <a href="#">
-                    <div class="subject-item">
-                        <h5>অসমীয়া</h5>
-                    </div>
-                </a>
-                <a href="#">
-                    <div class="subject-item">
-                        <h5>গণিত</h5>
-                    </div>
-                </a>
-                <a href="class-iv\class-iv-english\iv-english.html">
-                    <div class="subject-item">
-                        <h5>ইংৰাজী</h5>
-                    </div>
-                </a>
-                <a href="class-iv\class-iv-evs\iv-evs.html">
-                    <div class="subject-item">
-                        <h5>পৰিৱেশ</h5>
-                    </div>
-                </a>
-            </section>
-        </div>
-
-    </section>
-
-
-
-</body>
-
-</html>
+   </body>
+   </html>
