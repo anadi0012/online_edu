@@ -324,24 +324,28 @@
                 });
             });
             let lastTouchTime = 0;
-            const doubleTapThreshold = 300; // milliseconds
+const doubleTapThreshold = 300; // milliseconds
 
-            document.addEventListener('touchstart', (event) => {
-                const currentTime = new Date().getTime();
+document.addEventListener('touchstart', (event) => {
+    const currentTime = new Date().getTime();
 
-                if (currentTime - lastTouchTime <= doubleTapThreshold) {
-                    const target = event.target.closest('td.line');
-                    if (target) {
-                        const index = Array.from(lineElements).indexOf(target);
-                        if (index !== -1) {
-                            // Call displayWords if a valid index is found
-                            displayWords(lines[index], event.pageX, event.pageY);
-                        }
-                    }
-                }
+    if (currentTime - lastTouchTime <= doubleTapThreshold) {
+        const target = event.target.closest('td.line');
+        if (target) {
+            const index = Array.from(lineElements).indexOf(target);
+            if (index !== -1) {
+                // Call displayWords if a valid index is found and use clientX/clientY for accurate positioning
+                const touchX = event.touches[0].clientX;
+                const touchY = event.touches[0].clientY;
 
-                lastTouchTime = currentTime;
-            });
+                displayWords(lines[index], touchX, touchY);
+            }
+        }
+    }
+
+    lastTouchTime = currentTime;
+});
+            
 
 
             function handleDoubleTap(event) {
