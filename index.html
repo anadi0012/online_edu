@@ -323,6 +323,32 @@
                     rate: 0.7
                 });
             });
+            let lastTouchTime = 0;
+            const doubleTapThreshold = 300; // milliseconds
+
+            document.addEventListener('touchstart', (event) => {
+                const currentTime = new Date().getTime();
+
+                if (currentTime - lastTouchTime <= doubleTapThreshold) {
+                    const target = event.target.closest('td.line');
+                    if (target) {
+                        const index = Array.from(lineElements).indexOf(target);
+                        if (index !== -1) {
+                            // Call displayWords if a valid index is found
+                            displayWords(lines[index], event.pageX, event.pageY);
+                        }
+                    }
+                }
+
+                lastTouchTime = currentTime;
+            });
+
+
+            function handleDoubleTap(event) {
+                const x = event.pageX;
+                const y = event.pageY;
+                displayWords(lines[index], x, y);
+            }
 
             element.addEventListener('dblclick', (event) => {
                 const x = event.pageX;
