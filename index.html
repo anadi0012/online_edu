@@ -88,10 +88,65 @@
             border-radius: 5px;
             background-color: rgba(255, 0, 0, 0.24);
         }
+        /* Add your custom styles here */
+        
+        .word-container {
+            position: absolute;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f8f2a2;
+            z-index: 100;
+            display: none;
+            /* Initially hidden */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            /* Prevent overflow */
+            max-height: 300px;
+            /* Limit height for better visibility */
+            overflow-y: auto;
+            /* Scroll if content overflows */
+        }
+        
+        .word-container button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background-color: #f44336;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            /* Make text readable */
+        }
+        
+        .word-container button:hover {
+            background-color: #d32f2f;
+        }
+        
+        .word-container span {
+            display: inline-block;
+            margin: 2px;
+            padding: 2px 5px;
+            background-color: #eee;
+            border-radius: 3px;
+        }
+        
+        .word-container span:hover {
+            cursor: pointer;
+            background-color: blue;
+            color: white;
+            font-weight: 300;
+        }
     </style>
 </head>
 
 <body>
+    <div id="wordArea" class="word-container">
+        <button id="closeButton">Close</button>
+    </div>
     <!-- Save for Web Slices (page-1.jpg) -->
     <table id="Table_01" width="797" height="1004" border="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -203,6 +258,7 @@
                 <img src="images/spacer.gif" width="16" height="1" alt=""></td>
         </tr>
     </table>
+
     <!-- End Save for Web Slices -->
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=a2zBsS5s"></script>
     <script>
@@ -210,39 +266,77 @@
         const lines = [
             "Let's read the play A Golden Voice",
             "Scene One",
-            "Two boys, Arun and Aziz are walking fast in the evening.",
+            "Two boys, Arun and Aziz are walking fast in the evening",
             "Aziz",
-            "Look at the sky.",
-            "It’s going to rain heavily.",
-            "A strong wind is also blowing.",
-            "A strong wind is also blowing.",
+            "Look at the sky",
+            "It’s going to rain heavily",
+            "A strong wind is also blowing",
+            "A strong wind is also blowing",
             "Arun",
-            "I’m afraid of thunder and lightning.",
+            "I’m afraid of thunder and lightning",
             "Lightning",
             "Aziz",
-            "Don’t panic, Arun.",
+            "Don’t panic Arun",
             "Look at that big tall tree there",
-            "Let’s wait under it until the rain stops.",
-            "Let’s wait under it until the rain stops.",
-            "Arun and Aziz stand under the tree."
+            "Let’s wait under it until the rain stops",
+            "Let’s wait under it until the rain stops",
+            "Arun and Aziz stand under the tree"
         ];
 
         // Select all the table cells with the class 'line'
         const lineElements = document.querySelectorAll('td.line');
+        const wordContainer = document.getElementById('wordArea');
+        const closeButton = document.getElementById('closeButton');
 
-        // Add an event listener to each line
+        // Function to display words in the word container
+        function displayWords(sentence, x, y) {
+            // Split the sentence into words
+            const words = sentence.split(' ');
+
+            // Clear previous content
+            wordContainer.innerHTML = '';
+
+            // Create and append each word as a span with a click event
+            words.forEach(word => {
+                const span = document.createElement('span');
+                span.textContent = word;
+                span.addEventListener('click', () => {
+                    responsiveVoice.speak(word, "Hindi Male", {
+                        rate: 1
+                    });
+                });
+                wordContainer.appendChild(span);
+            });
+
+            // Position the word container at the click position
+            wordContainer.style.left = `${x}px`;
+            wordContainer.style.top = `${y}px`;
+
+            // Show the word container
+            wordContainer.style.display = 'block';
+        }
+
+        // Add event listeners to each line element
         lineElements.forEach((element, index) => {
-            element.addEventListener('click', () => {
+            element.addEventListener('click', (event) => {
                 responsiveVoice.speak(lines[index], "Hindi Male", {
                     rate: 0.7
-                }, {
-                    pitch: 1.9
                 });
+            });
+
+            element.addEventListener('dblclick', (event) => {
+                const x = event.pageX;
+                const y = event.pageY;
+                displayWords(lines[index], x, y);
             });
         });
 
+        // Add event listener to the close button
+        closeButton.addEventListener('click', () => {
+            wordContainer.style.display = 'none';
+        });
 
-
+        // Handle group hover as before
         handleGroupHover();
 
         function handleGroupHover() {
@@ -276,6 +370,8 @@
             });
         }
     </script>
+
 </body>
+
 
 </html>
