@@ -332,9 +332,17 @@
         });
 
         // Add event listener to the close button
-        closeButton.addEventListener('click', () => {
-            wordContainer.style.display = 'none';
+        const wordContainer1 = document.getElementById('wordArea');
+
+        document.addEventListener('click', (event) => {
+            // Check if the click was outside the word container
+            if (!wordContainer1.contains(event.target)) {
+                wordContainer1.style.display = 'none';
+                // Place your action here
+            }
         });
+
+
 
         // Handle group hover as before
         handleGroupHover();
