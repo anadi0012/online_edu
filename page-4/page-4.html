@@ -478,126 +478,94 @@
 
         ];
 
-        // Select all the table cells with the class 'line'
-        const lineElements = document.querySelectorAll('td.line');
-        const wordContainer = document.getElementById('wordArea');
-        const closeButton = document.getElementById('closeButton');
+              // Select all the table cells with the class 'line'
+    const lineElements = document.querySelectorAll('td.line');
+    const wordContainer = document.getElementById('wordArea');
 
-        // Function to display words in the word container
-        function displayWords(sentence, x, y) {
-            // Split the sentence into words
-            const words = sentence.split(' ');
+    // Function to display words in the word container
+    function displayWords(sentence, x, y) {
+        // Split the sentence into words
+        const words = sentence.split(' ');
 
-            // Clear previous content
-            wordContainer.innerHTML = '';
+        // Clear previous content
+        wordContainer.innerHTML = '';
 
-            // Create and append each word as a span with a click event
-            words.forEach(word => {
-                const span = document.createElement('span');
-                span.textContent = word;
-                span.addEventListener('click', () => {
-                    responsiveVoice.speak(word, "US English Male", {
-                        rate: 1
-                    });
-                });
-                wordContainer.appendChild(span);
-            });
-
-            // Position the word container at the click position
-            wordContainer.style.left = `${x}px`;
-            wordContainer.style.top = `${y}px`;
-
-            // Show the word container
-            wordContainer.style.display = 'block';
-        }
-
-        // Add event listeners to each line element
-        lineElements.forEach((element, index) => {
-            element.addEventListener('click', (event) => {
-                responsiveVoice.speak(lines[index], "Hindi Male", {
-                    rate: 0.7
+        // Create and append each word as a span with a click event
+        words.forEach(word => {
+            const span = document.createElement('span');
+            span.textContent = word;
+            span.addEventListener('click', () => {
+                responsiveVoice.speak(word, "US English Male", {
+                    rate: 1
                 });
             });
-            let lastTouchTime = 0;
-            const doubleTapThreshold = 300; // milliseconds
+            wordContainer.appendChild(span);
+        });
 
-            document.addEventListener('touchstart', (event) => {
-                const currentTime = new Date().getTime();
+        // Position the word container at the click position
+        wordContainer.style.left = `${x}px`;
+        wordContainer.style.top = `${y}px`;
 
-                if (currentTime - lastTouchTime <= doubleTapThreshold) {
-                    const target = event.target.closest('td class="line".line');
-                    if (target) {
-                        const index = Array.from(lineElements).indexOf(target);
-                        if (index !== -1) {
-                            // Call displayWords if a valid index is found
-                            displayWords(lines[index], event.pageX, event.pageY);
-                        }
-                    }
-                }
+        // Show the word container
+        wordContainer.style.display = 'block';
+    }
 
-                lastTouchTime = currentTime;
-            });
-
-
-            function handleDoubleTap(event) {
-                const x = event.pageX;
-                const y = event.pageY;
-                displayWords(lines[index], x, y);
-            }
-
-            element.addEventListener('dblclick', (event) => {
-                const x = event.pageX;
-                const y = event.pageY;
-                displayWords(lines[index], x, y);
+    // Add event listeners to each line element
+    lineElements.forEach((element, index) => {
+        element.addEventListener('click', (event) => {
+            responsiveVoice.speak(lines[index], "Hindi Male", {
+                rate: 0.7
             });
         });
 
-        // Add event listener to the close button
-        const wordContainer1 = document.getElementById('wordArea');
+        // Use touchstart event to handle double taps
+        let lastTouchTime = 0;
+        const doubleTapThreshold = 300; // milliseconds
 
-        document.addEventListener('click', (event) => {
-            // Check if the click was outside the word container
-            if (!wordContainer1.contains(event.target)) {
-                wordContainer1.style.display = 'none';
-                // Place your action here
+        element.addEventListener('touchstart', (event) => {
+            const currentTime = new Date().getTime();
+
+            // Check for double tap
+            if (currentTime - lastTouchTime <= doubleTapThreshold) {
+                const x = event.touches[0].pageX; // Get touch X position
+                const y = event.touches[0].pageY; // Get touch Y position
+                displayWords(lines[index], x, y);
             }
+
+            lastTouchTime = currentTime;
         });
+    });
 
-
-
-        // Handle group hover as before
-        handleGroupHover();
-
-        function handleGroupHover() {
-            // Select all cells with a data-group attribute
-            const allCells = document.querySelectorAll('[data-group]');
-
-            allCells.forEach(cell => {
-                // When mouse enters (hover starts)
-                cell.addEventListener('mouseenter', () => {
-                    // Get the group number from the data attribute
-                    const groupNumber = cell.getAttribute('data-group');
-
-                    // Find all cells in the same group
-                    const groupCells = document.querySelectorAll(`[data-group="${groupNumber}"]`);
-
-                    // Add highlight class to all cells in the group
-                    groupCells.forEach(c => c.classList.add('group-highlight'));
-                });
-
-                // When mouse leaves (hover ends)
-                cell.addEventListener('mouseleave', () => {
-                    // Get the group number from the data attribute
-                    const groupNumber = cell.getAttribute('data-group');
-
-                    // Find all cells in the same group
-                    const groupCells = document.querySelectorAll(`[data-group="${groupNumber}"]`);
-
-                    // Remove highlight class from all cells in the group
-                    groupCells.forEach(c => c.classList.remove('group-highlight'));
-                });
-            });
+    // Add event listener to close the word container when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!wordContainer.contains(event.target)) {
+            wordContainer.style.display = 'none';
         }
+    });
+
+    // Handle group hover as before
+    handleGroupHover();
+
+    function handleGroupHover() {
+        // Select all cells with a data-group attribute
+        const allCells = document.querySelectorAll('[data-group]');
+
+        allCells.forEach(cell => {
+            // When mouse enters (hover starts)
+            cell.addEventListener('mouseenter', () => {
+                const groupNumber = cell.getAttribute('data-group');
+                const groupCells = document.querySelectorAll(`[data-group="${groupNumber}"]`);
+                groupCells.forEach(c => c.classList.add('group-highlight'));
+            });
+
+            // When mouse leaves (hover ends)
+            cell.addEventListener('mouseleave', () => {
+                const groupNumber = cell.getAttribute('data-group');
+                const groupCells = document.querySelectorAll(`[data-group="${groupNumber}"]`);
+                groupCells.forEach(c => c.classList.remove('group-highlight'));
+            });
+        });
+    }
     </script>
 </body>
 
