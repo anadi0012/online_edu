@@ -310,7 +310,7 @@
             "Arun and Aziz stand under the tree"
         ];
 
-        // Select all the table cells with the class 'line'
+            // Select all the table cells with the class 'line'
     const lineElements = document.querySelectorAll('td.line');
     const wordContainer = document.getElementById('wordArea');
 
@@ -327,7 +327,7 @@
             const span = document.createElement('span');
             span.textContent = word;
             span.addEventListener('click', () => {
-                responsiveVoice.speak(word, ""Hindi Male", {
+                responsiveVoice.speak(word, "Hindi Male", {
                     rate: 1
                 });
             });
