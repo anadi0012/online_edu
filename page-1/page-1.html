@@ -367,7 +367,11 @@
             lastTouchTime = currentTime;
         });
     });
-
+element.addEventListener('dblclick', (event) => {
+    const x = event.clientX; // Get the X position of the double-click
+    const y = event.clientY; // Get the Y position of the double-click
+    displayWords(lines[index], x, y);
+});
     // Add event listener to close the word container when clicking outside
     document.addEventListener('click', (event) => {
         if (!wordContainer.contains(event.target)) {
