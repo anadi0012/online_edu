@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Weight Balance Learning Tool</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        h1 { color: #2c3e50; }
+        
+        /* Balance Scale Styling */
+        .scale-container { position: relative; width: 600px; height: 350px; margin: 40px 0; border-bottom: 15px solid #7f8c8d; }
+        .pivot { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 60px solid #34495e; }
+        
+        .beam { 
+            position: absolute; 
+            top: 100px; 
+            left: 50%; 
+            width: 500px; 
+            height: 10px; 
+            background: #95a5a6; 
+            transition: transform 0.5s ease; 
+            transform-origin: center;
+            transform: translateX(-50%);
+        }
+        
+        .tray { 
+            width: 150px; 
+            height: 20px; 
+            background: #bdc3c7; 
+            border-radius: 0 0 50px 50px; 
+            position: absolute; 
+            top: 10px; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center;
+            align-content: flex-start; 
+            padding: 10px; 
+            min-height: 100px; 
+            border: 3px solid #7f8c8d; 
+        }
+        
+        #left-tray { left: -75px; }
+        #right-tray { right: -75px; }
+
+        /* Weights Styling */
+        .weights-bank { display: flex; gap: 10px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .weight { 
+            width: 65px; 
+            height: 65px; 
+            background: #3498db; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 8px; 
+            cursor: grab; 
+            font-weight: bold; 
+            font-size: 14px; 
+            text-align: center; 
+            box-shadow: 0 4px 0 #2980b9;
+            user-select: none;
+        }
+
+        /* Styling for weights when they are inside the tray */
+        .tray .weight { 
+            transform: scale(0.8); 
+            margin: -5px; 
+            font-size: 12px; 
+            cursor: pointer;
+            box-shadow: 0 2px 0 #2980b9;
+        }
+
+        .weight[data-val="1000"] { background: #e67e22; box-shadow: 0 4px 0 #d35400; }
+        .tray .weight[data-val="1000"] { box-shadow: 0 2px 0 #d35400; }
+
+        .status { margin-top: 20px; font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+        .counter { font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; background: #34495e; color: white; padding: 10px 20px; border-radius: 5px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>⚖️ The Gram Explorer</h1>
+    <p>Drag weights to the scales to balance them! <strong>1kg = 1000g</strong></p>
+
+    <div class="counter">
+        Left: <span id="left-total">0</span>g | Right: <span id="right-total">0</span>g
+    </div>
+
+    <div class="scale-container">
+        <div class="pivot"></div>
+        <div id="beam" class="beam">
+            <div id="left-tray" class="tray" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            <div id="right-tray" class="tray" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+    </div>
+
+    <div class="weights-bank">
+        <div class="weight" draggable="true" ondragstart="drag(event)" data-val="10">10g</div>
+        <div class="weight" draggable="true" ondragstart="drag(event)" data-val="50">50g</div>
+        <div class="weight" draggable="true" ondragstart="drag(event)" data-val="100">100g</div>
+        <div class="weight" draggable="true" ondragstart="drag(event)" data-val="200">200g</div>
+        <div class="weight" draggable="true" ondragstart="drag(event)" data-val="500">500g</div>
+        <div class="weight" draggable="true" ondragstart="drag(event)" data-val="1000">1kg<br>(1000g)</div>
+    </div>
+
+    <div id="message" class="status">Add weights to begin...</div>
+    <button onclick="location.reload()" style="margin-top:20px; padding: 10px 20px; background: #95a5a6; color: white; border: none; border-radius: 5px; cursor:pointer; font-weight: bold;">Reset Scales</button>
+
+    <script>
+        function allowDrop(ev) { 
+            ev.preventDefault(); 
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.getAttribute('data-val'));
+            ev.dataTransfer.setData("label", ev.target.innerHTML); // Changed to innerHTML to keep the <br> for 1kg
+            ev.dataTransfer.setData("color", window.getComputedStyle(ev.target).backgroundColor);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const val = ev.dataTransfer.getData("text");
+            const label = ev.dataTransfer.getData("label");
+            const color = ev.dataTransfer.getData("color");
+            
+            // Find the tray even if dropped on an existing weight
+            let tray = ev.target;
+            while (tray && !tray.classList.contains('tray')) {
+                tray = tray.parentElement;
+            }
+
+            if (tray) {
+                const newWeight = document.createElement("div");
+                newWeight.className = "weight";
+                newWeight.innerHTML = label; // Restores the weight number text
+                newWeight.style.backgroundColor = color;
+                newWeight.setAttribute('data-val', val);
+                
+                // Clicking a weight in the tray removes it
+                newWeight.onclick = function() { 
+                    this.remove(); 
+                    calculateWeights(); 
+                };
+                
+                tray.appendChild(newWeight);
+                calculateWeights();
+            }
+        }
+
+        function calculateWeights() {
+            let leftSum = 0;
+            let rightSum = 0;
+
+            document.querySelectorAll('#left-tray .weight').forEach(w => leftSum += parseInt(w.dataset.val));
+            document.querySelectorAll('#right-tray .weight').forEach(w => rightSum += parseInt(w.dataset.val));
+
+            document.getElementById('left-total').innerText = leftSum;
+            document.getElementById('right-total').innerText = rightSum;
+
+            const beam = document.getElementById('beam');
+            const diff = leftSum - rightSum;
+            
+            // Calculate tilt: positive diff tilts left, negative tilts right
+            let angle = Math.min(Math.max(diff / 40, -15), 15);
+            beam.style.transform = `translateX(-50%) rotate(${-angle}deg)`;
+
+            const msg = document.getElementById('message');
+            if (leftSum > 0 && leftSum === rightSum) {
+                msg.innerText = "⭐ Perfect Balance! Both sides are " + leftSum + "g";
+                msg.style.color = "#27ae60";
+            } else if (leftSum > rightSum) {
+                msg.innerText = "The Left side is heavier!";
+                msg.style.color = "#34495e";
+            } else if (rightSum > leftSum) {
+                msg.innerText = "The Right side is heavier!";
+                msg.style.color = "#34495e";
+            } else {
+                msg.innerText = "Try to balance the scales...";
+                msg.style.color = "#34495e";
+            }
+        }
+    </script>
+</body>
+</html>
